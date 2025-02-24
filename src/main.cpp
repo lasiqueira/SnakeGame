@@ -1,7 +1,14 @@
-#include "SDL3/SDL.h"
+#include "game.hpp"
 
-int main()
+int main(int argc, char **argv)
 {
-    SDL_Log("%s", "Hello, World!");
+    Game game;
+    
+    if(!game.Init()) return 1;
+    
+    game.Run();
+    
+    game.Quit();
+
     return 0;
 }

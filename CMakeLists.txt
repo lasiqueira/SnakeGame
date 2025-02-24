@@ -25,6 +25,9 @@ endif()
 # Add SDL3 subdirectory
 add_subdirectory(vendor/SDL EXCLUDE_FROM_ALL)
 
+# Collect all source files in the src directory
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+
 # Link SDL3 library
-add_executable(SnakeGame src/main.cpp)
+add_executable(SnakeGame ${SOURCES})
 target_link_libraries(SnakeGame PRIVATE SDL3::SDL3)
