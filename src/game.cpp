@@ -141,6 +141,7 @@ void Game::Update(double delta_time)
 
 void Game::SpawnApple()
 {
+    //TODO prevent apple from spawning on top of snake
     apple_.rect_.w = SIZE;
     apple_.rect_.h = SIZE;
     apple_.rect_.x = (rand() % (window_width_ / SIZE)) * SIZE;
