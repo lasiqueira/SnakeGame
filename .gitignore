@@ -1,3 +1,4 @@
 build
 .vscode
 vendor/*
+.DS_Store
