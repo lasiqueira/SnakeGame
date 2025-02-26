@@ -10,8 +10,6 @@ struct Vec2
 struct Snake
 {
     SDL_FRect rect_;
-    Vec2 velocity_;
-    void Update(int window_width, int window_height, double delta_time);
 };
 struct Apple
 {

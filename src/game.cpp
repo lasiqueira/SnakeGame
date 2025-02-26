@@ -15,7 +15,8 @@ bool Game::Init() {
     
     SDL_SetWindowPosition(window_, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
     
-    
+    velocity_.y_ = -SPEED;
+    velocity_.x_ = 0;
     SpawnSnake();
     SpawnApple();
     running_ = true;
@@ -74,34 +75,34 @@ void Game::HandleKeyPress(SDL_Keycode key)
             break;
         case SDLK_LEFT:
         case SDLK_A:
-            if(snake_[0].velocity_.x_ == 0)
+            if(velocity_.x_ == 0)
             {
-                snake_[0].velocity_.x_ = -SPEED;
-                snake_[0].velocity_.y_ = 0;
+                velocity_.x_ = -SPEED;
+                velocity_.y_ = 0;
             }
             break;
         case SDLK_RIGHT:
         case SDLK_D:
-            if(snake_[0].velocity_.x_ == 0)
+            if(velocity_.x_ == 0)
             {
-                snake_[0].velocity_.x_ = SPEED;
-                snake_[0].velocity_.y_ = 0;
+                velocity_.x_ = SPEED;
+                velocity_.y_ = 0;
             }
             break;
         case SDLK_UP:
         case SDLK_W:
-            if(snake_[0].velocity_.y_ == 0)
+            if(velocity_.y_ == 0)
             {
-                snake_[0].velocity_.x_ = 0;
-                snake_[0].velocity_.y_ = -SPEED;
+                velocity_.x_ = 0;
+                velocity_.y_ = -SPEED;
             }
             break;
         case SDLK_DOWN:
         case SDLK_S:
-            if(snake_[0].velocity_.y_ == 0)
+            if(velocity_.y_ == 0)
             {
-                snake_[0].velocity_.x_ = 0;
-                snake_[0].velocity_.y_ = SPEED;
+                velocity_.x_ = 0;
+                velocity_.y_ = SPEED;
             }
             break;
         default:
@@ -127,9 +128,14 @@ void Game::Render()
 }
 void Game::Update(double delta_time) 
 {
-    snake_[0].Update(window_width_, window_height_, delta_time);
-    CheckCollision();
-    MoveSnake();
+    move_timer_ += delta_time;
+    if(move_timer_ >= move_interval_)
+    {
+        move_timer_ -= move_interval_; 
+        MoveSnake();
+        CheckCollision();
+    }
+
 }
 
 void Game::SpawnApple()
@@ -145,8 +151,6 @@ void Game::SpawnSnake()
     snake_.reserve(SNAKE_MAX);
     Snake snake;
     snake_.emplace_back(snake);
-    snake_[0].velocity_.y_ = -SPEED;
-    snake_[0].velocity_.x_ = 0;
     snake_[0].rect_.x = window_width_/2;
     snake_[0].rect_.y = window_height_/2;
     snake_[0].rect_.w = SIZE;
@@ -160,8 +164,7 @@ void Game::CheckCollision()
        snake_[0].rect_.y < apple_.rect_.y + apple_.rect_.h &&
        snake_[0].rect_.y + snake_[0].rect_.h > apple_.rect_.y)
     {
-        for(int i = 0; i < 100; i++) //temp solution to snake showing small growth
-            GrowSnake();
+        GrowSnake();
         SpawnApple();
     }
 }
@@ -173,7 +176,6 @@ void Game::GrowSnake()
     new_snake.rect_.y = snake_[snake_.size()-1].rect_.y;
     new_snake.rect_.w = SIZE;
     new_snake.rect_.h = SIZE;
-    new_snake.velocity_ = snake_[snake_.size()-1].velocity_;
    
     snake_.emplace_back(new_snake);
 }
@@ -184,11 +186,20 @@ void Game::MoveSnake()
     {
         snake_[i].rect_.x = snake_[i-1].rect_.x;
         snake_[i].rect_.y = snake_[i-1].rect_.y;
-        snake_[i].velocity_ = snake_[i-1].velocity_;
 
     }
+    MoveSnakeHead();
 }
+void Game::MoveSnakeHead()
+{
+    snake_[0].rect_.x += velocity_.x_ * SIZE;
+    snake_[0].rect_.y += velocity_.y_ * SIZE;
 
+    if(snake_[0].rect_.x < 0)  snake_[0].rect_.x = window_width_ - SIZE;
+    if(snake_[0].rect_.x >= window_width_)  snake_[0].rect_.x = 0;
+    if(snake_[0].rect_.y < 0)  snake_[0].rect_.y = window_height_ - SIZE;
+    if(snake_[0].rect_.y >= window_height_)  snake_[0].rect_.y = 0;
+}
 void Game::Reset()
 {
     snake_.clear();

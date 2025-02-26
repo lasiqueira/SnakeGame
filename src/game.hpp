@@ -4,7 +4,7 @@
 #include "SDL3/SDL.h"
 #include "entities.hpp"
 
-#define SPEED 100
+#define SPEED 1
 #define SIZE 20
 #define SNAKE_MAX 24000
 
@@ -18,6 +18,9 @@ struct Game
     uint16_t window_height_ = 600;
     std::vector<Snake> snake_;
     Apple apple_;
+    Vec2 velocity_;
+    double move_timer_ = 0;
+    double move_interval_ = 0.1;
     bool Init();
     void Quit();
     void Run();
@@ -31,5 +34,6 @@ struct Game
     void SpawnApple();
     void MoveSnake();
     void CheckCollision();
+    void MoveSnakeHead();
     void Reset();
 };
