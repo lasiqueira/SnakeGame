@@ -22,6 +22,18 @@ elseif(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUNIX -O2")
 endif()
 
+# Add custom target to initialize and update git submodules
+find_package(Git REQUIRED)
+if(GIT_FOUND)
+    message(STATUS "Git found: ${GIT_EXECUTABLE}")
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
+                    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
+    if(NOT GIT_SUBMOD_RESULT EQUAL "0")
+        message(FATAL_ERROR "Failed to initialize git submodules")
+    endif()
+endif()
+
 # Add SDL3 subdirectory
 add_subdirectory(vendor/SDL EXCLUDE_FROM_ALL)
 
