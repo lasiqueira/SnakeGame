@@ -141,11 +141,25 @@ void Game::Update(double delta_time)
 
 void Game::SpawnApple()
 {
-    //TODO prevent apple from spawning on top of snake
-    apple_.rect_.w = SIZE;
-    apple_.rect_.h = SIZE;
-    apple_.rect_.x = (rand() % (window_width_ / SIZE)) * SIZE;
-    apple_.rect_.y = (rand() % (window_height_ / SIZE)) * SIZE;
+    bool valid_position = false;
+
+    while (!valid_position)
+    {
+        valid_position = true;
+        apple_.rect_.w = SIZE;
+        apple_.rect_.h = SIZE;
+        apple_.rect_.x = (rand() % (window_width_ / SIZE)) * SIZE;
+        apple_.rect_.y = (rand() % (window_height_ / SIZE)) * SIZE;
+
+        for (const auto& segment : snake_)
+        {
+            if (apple_.rect_.x == segment.rect_.x && apple_.rect_.y == segment.rect_.y)
+            {
+                valid_position = false;
+                break;
+            }
+        }
+    }
 }
 
 void Game::SpawnSnake()
@@ -228,6 +242,8 @@ void Game::Reset()
     snake_.clear();
     SpawnSnake();
     SpawnApple();
+    velocity_.y_ = -SPEED;
+    velocity_.x_ = 0;
 }
 
 void Game::CheckWinCondition()
