@@ -159,14 +159,8 @@ void Game::SpawnSnake()
 
 void Game::CheckCollision()
 {
-    if(snake_[0].rect_.x < apple_.rect_.x + apple_.rect_.w &&
-       snake_[0].rect_.x + snake_[0].rect_.w > apple_.rect_.x &&
-       snake_[0].rect_.y < apple_.rect_.y + apple_.rect_.h &&
-       snake_[0].rect_.y + snake_[0].rect_.h > apple_.rect_.y)
-    {
-        GrowSnake();
-        SpawnApple();
-    }
+    CollisionWithApple();
+    CollisionWithSelf();
 }
 
 void Game::GrowSnake()
@@ -180,6 +174,32 @@ void Game::GrowSnake()
     snake_.emplace_back(new_snake);
 }
 
+void Game::CollisionWithApple()
+{
+    if(snake_[0].rect_.x < apple_.rect_.x + apple_.rect_.w &&
+        snake_[0].rect_.x + snake_[0].rect_.w > apple_.rect_.x &&
+        snake_[0].rect_.y < apple_.rect_.y + apple_.rect_.h &&
+        snake_[0].rect_.y + snake_[0].rect_.h > apple_.rect_.y)
+     {
+         GrowSnake();
+         SpawnApple();
+     }
+}
+
+void Game::CollisionWithSelf()
+{
+    for(int i = 2; i < snake_.size(); i++)
+    {
+        if(snake_[0].rect_.x < snake_[i].rect_.x + snake_[i].rect_.w &&
+            snake_[0].rect_.x + snake_[0].rect_.w > snake_[i].rect_.x &&
+            snake_[0].rect_.y < snake_[i].rect_.y + snake_[i].rect_.h &&
+            snake_[0].rect_.y + snake_[0].rect_.h > snake_[i].rect_.y)
+        {
+            SDL_Delay(1000);
+            Reset();
+        }
+    }
+}
 void Game::MoveSnake()
 {
     for(int i = snake_.size()-1; i > 0; i--)

@@ -34,6 +34,8 @@ struct Game
     void SpawnApple();
     void MoveSnake();
     void CheckCollision();
+    void CollisionWithApple();
+    void CollisionWithSelf();
     void MoveSnakeHead();
     void Reset();
 };
