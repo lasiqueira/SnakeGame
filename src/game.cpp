@@ -134,16 +134,17 @@ void Game::Update(double delta_time)
         move_timer_ -= move_interval_; 
         MoveSnake();
         CheckCollision();
+        CheckWinCondition();
     }
 
 }
 
 void Game::SpawnApple()
 {
-    apple_.rect_.x = rand() % window_width_;
-    apple_.rect_.y = rand() % window_height_;
     apple_.rect_.w = SIZE;
     apple_.rect_.h = SIZE;
+    apple_.rect_.x = (rand() % (window_width_ / SIZE)) * SIZE;
+    apple_.rect_.y = (rand() % (window_height_ / SIZE)) * SIZE;
 }
 
 void Game::SpawnSnake()
@@ -181,8 +182,8 @@ void Game::CollisionWithApple()
         snake_[0].rect_.y < apple_.rect_.y + apple_.rect_.h &&
         snake_[0].rect_.y + snake_[0].rect_.h > apple_.rect_.y)
      {
-         GrowSnake();
-         SpawnApple();
+        GrowSnake();        
+        SpawnApple();
      }
 }
 
@@ -195,6 +196,7 @@ void Game::CollisionWithSelf()
             snake_[0].rect_.y < snake_[i].rect_.y + snake_[i].rect_.h &&
             snake_[0].rect_.y + snake_[0].rect_.h > snake_[i].rect_.y)
         {
+            SDL_Log("You Lose!");
             SDL_Delay(1000);
             Reset();
         }
@@ -225,4 +227,14 @@ void Game::Reset()
     snake_.clear();
     SpawnSnake();
     SpawnApple();
+}
+
+void Game::CheckWinCondition()
+{
+    if(snake_.size() == SNAKE_MAX)
+    {
+        SDL_Log("You Win!");
+        SDL_Delay(1000);
+        Reset();
+    }
 }

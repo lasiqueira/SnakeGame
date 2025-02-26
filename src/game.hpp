@@ -6,7 +6,7 @@
 
 #define SPEED 1
 #define SIZE 20
-#define SNAKE_MAX 24000
+#define SNAKE_MAX 100
 
 
 struct Game 
@@ -38,4 +38,5 @@ struct Game
     void CollisionWithSelf();
     void MoveSnakeHead();
     void Reset();
+    void CheckWinCondition();
 };
