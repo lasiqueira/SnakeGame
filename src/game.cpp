@@ -149,12 +149,13 @@ void Game::SpawnApple()
 void Game::SpawnSnake()
 {
     snake_.reserve(SNAKE_MAX);
-    Snake snake;
-    snake_.emplace_back(snake);
-    snake_[0].rect_.x = window_width_/2;
-    snake_[0].rect_.y = window_height_/2;
-    snake_[0].rect_.w = SIZE;
-    snake_[0].rect_.h = SIZE;
+    GameEntity snake_head;
+    
+    snake_head.rect_.x = window_width_/2;
+    snake_head.rect_.y = window_height_/2;
+    snake_head.rect_.w = SIZE;
+    snake_head.rect_.h = SIZE;
+    snake_.emplace_back(std::move(snake_head));
 }
 
 void Game::CheckCollision()
@@ -165,13 +166,12 @@ void Game::CheckCollision()
 
 void Game::GrowSnake()
 {
-    Snake new_snake;
-    new_snake.rect_.x = snake_[snake_.size()-1].rect_.x;
-    new_snake.rect_.y = snake_[snake_.size()-1].rect_.y;
-    new_snake.rect_.w = SIZE;
-    new_snake.rect_.h = SIZE;
-   
-    snake_.emplace_back(new_snake);
+    GameEntity new_segment;
+    new_segment.rect_.x = snake_[snake_.size()-1].rect_.x;
+    new_segment.rect_.y = snake_[snake_.size()-1].rect_.y;
+    new_segment.rect_.w = SIZE;
+    new_segment.rect_.h = SIZE;
+    snake_.emplace_back(std::move(new_segment));
 }
 
 void Game::CollisionWithApple()

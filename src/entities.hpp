@@ -7,11 +7,7 @@ struct Vec2
     Vec2 operator+(const Vec2& other) const;
     Vec2 operator*(const double val) const;
 };
-struct Snake
-{
-    SDL_FRect rect_;
-};
-struct Apple
+struct GameEntity
 {
     SDL_FRect rect_;
 };

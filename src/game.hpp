@@ -16,8 +16,8 @@ struct Game
     bool running_;
     uint16_t window_width_ = 800;
     uint16_t window_height_ = 600;
-    std::vector<Snake> snake_;
-    Apple apple_;
+    std::vector<GameEntity> snake_;
+    GameEntity apple_;
     Vec2 velocity_;
     double move_timer_ = 0;
     double move_interval_ = 0.1;
